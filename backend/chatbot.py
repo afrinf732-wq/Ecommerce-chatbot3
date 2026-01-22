@@ -1,3 +1,9 @@
+import json
+
+# Load products data
+with open("backend/products.json", "r") as file:
+    products = json.load(file)
+
 def get_response(user_message):
     if not user_message:
         return "Please type something."
@@ -5,12 +11,16 @@ def get_response(user_message):
     message = user_message.lower()
 
     if "hello" in message or "hi" in message:
-        return "Hello! Welcome to our store. How can I help you?"
+        return "Hello! Welcome to our store 😊"
 
     if "products" in message:
-        return "We have mobiles, laptops, and accessories."
+        product_names = [p["name"] for p in products]
+        return "We have: " + ", ".join(product_names)
 
     if "price" in message:
-        return "Please tell me which product you want the price for."
+        for product in products:
+            if product["name"].lower() in message:
+                return f"The price of {product['name']} is ₹{product['price']}"
+        return "Please mention the product name."
 
-    return "Sorry, I didn't understand that. Please try again."
+    return "Sorry, I didn't understand. Try asking about products or prices."
